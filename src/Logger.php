@@ -24,11 +24,37 @@ class Logger {
     static public $output = true;
     
     /**
+     * This has precedence over the LOG_FILENAME and LOG_BASENAME constants
+     * 
+     * @var string 
+     */
+    static private $_log_filename = null;
+    
+    /**
+     * Overrules the LOG_FILENAME and LOG_PATH / LOG_BASENAME constants.
+     * 
+     * @param mixed $filename A relative (to LOG_PATH) filename, or an absolute filename, or false to disable logging to file completely.
+     */
+    static public function set_log_filename($filename) {
+        if (!is_string($filename)) {
+            self::$_log_filename = false;
+        }
+        if (substr($filename, 0, 1) !== '/') {
+            self::$_log_filename = self::get_log_path() . '/' . $filename;
+        } else {
+            self::$_log_filename = $filename;
+        }
+    }
+
+    /**
      * Get the log (base) name
      * 
      * @return string
      */
     static private function get_log_filename() {
+        if (is_string(self::$_log_filename)) {
+            return self::$_log_filename;
+        }
         if (defined('LOG_FILENAME')) {
             return LOG_FILENAME;
         }
