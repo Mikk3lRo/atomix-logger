@@ -1,0 +1,22 @@
+{
+    "name": "mikk3lro/atomix/logger",
+    "authors": [
+        {
+            "name": "Mikk3lRo",
+            "email": "mikk3lro@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4" : {
+            "Mikk3lRo\\atomix\\io\\" : "src/"
+        },
+        "exclude-from-classmap": ["/tests/"]
+    },
+    "archive": {
+        "exclude": ["/tests/"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6"
+    },
+    "license": "proprietary"
+}
