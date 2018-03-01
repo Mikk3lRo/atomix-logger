@@ -2,55 +2,85 @@
 namespace Mikk3lRo\atomix\io;
 
 class Logger {
-    static private $_log_filename = null;
-    static private $_indent = 0;
     /**
-     * Get the current script ID / log name
+     * Keeps track of the current indent level
+     * 
+     * @var int
+     */
+    static private $_indent = 0;
+    
+    /**
+     * Anything above this value will be ignored
+     * 
+     * @var int
+     */
+    static private $_max_log_level = 4;
+    
+    /**
+     * Write log to cli / browser?
+     * 
+     * @var int
+     */
+    static public $output = true;
+    
+    /**
+     * Get the log (base) name
      * 
      * @return string
      */
-    static private function get_log_name() {
+    static private function get_log_filename() {
         if (defined('LOG_FILENAME')) {
-            self::$_log_filename = LOG_FILENAME;
+            return LOG_FILENAME;
         }
-        if (!is_string(self::$_log_filename)) {
-            //Find the "originating" script - the "topmost" php-file
-            $backtrace = debug_backtrace(
-                defined("DEBUG_BACKTRACE_IGNORE_ARGS")
-                ? DEBUG_BACKTRACE_IGNORE_ARGS
-                : FALSE);
-            $top_frame = array_pop($backtrace);
-            self::$_log_filename = isset($top_frame['file']) ? basename($top_frame['file']) : 'unknown';
+        if (defined('LOG_BASENAME')) {
+            return self::get_log_path() . '/' . LOG_BASENAME;
         }
-        return self::$_log_filename;
+        return false;
     }
 
     /**
-     * Appends to a flat logfile, as well as the browser or cli if DEBUG is true.
-     * The special log_name 'output' skips the log file and only outputs to the
-     * browser or cli.
+     * Get the log path
+     * 
+     * @return string
+     */
+    static private function get_log_path() {
+        if (defined('LOG_PATH')) {
+            return LOG_PATH;
+        }
+        return '~/log';
+    }
+
+    /**
+     * Appends to a flat logfile (if enabled), and outputs to browser / cli (if enabled)
      *  
      * @param mixed     $string_or_array    What to write
      * @param int       $log_level          Higher levels are hidden when output verbosity is reduced
      */
-    static function write($string_or_array, $log_level = 0) {
-        if (DEBUG_LEVEL < $log_level) {
+    static function write($what, $log_level = 0) {
+        if (self::$_max_log_level < $log_level) {
+            //Ignore it completely
             return;
         }
-        if (!is_string($string_or_array)) {
-            $string_or_array = var_export($string_or_array, true);
+        
+        //Convert anything that is not a string
+        if (!is_string($what)) {
+            $what = var_export($what, true);
         }
+        
+        $log_time = '[' . date('Y-m-d H:i:s') . ']';
+        $log_ident = '[' . str_pad(getmypid(), 6, ' ', STR_PAD_LEFT) . ']';
         $log_indent = self::indent();
-        $string_or_array = '[' . date('Y-m-d H:i:s') . '][' . str_pad(getmypid(), 6, ' ', STR_PAD_LEFT) . '] ' . $log_indent . str_replace("\n", "\n" . $log_indent . str_repeat(' ', 30), trim($string_or_array));
-        $log_name = self::get_log_name();
-        if ($log_name === 'output' || !is_string($log_name)) {
-            echo $string_or_array . "\n";
-        } else {
-            $logfile = DIR_LOGS . '/' . $log_name . '.log';
-            if (!is_dir(DIR_LOGS)) {
-                mkdir(dirname($logfile), 0700, true);
-            }
-            file_put_contents($logfile, $string_or_array . "\n", FILE_APPEND);
+        $log_string = str_replace("\n", "\n" . $log_indent . str_repeat(' ', 30), trim($what));
+
+        $output = $log_time . $log_ident . ' ' . $log_indent . $log_string . "\n";
+        
+        $log_filename = self::get_log_filename();
+        
+        if (is_string($log_filename)) {
+            file_put_contents($log_filename, $output, FILE_APPEND);
+        }
+        if (self::$output) {
+            echo $output;
         }
     }
 
@@ -77,12 +107,5 @@ class Logger {
      */
     static private function indent() {
         return str_repeat(' ', self::$_indent);
-    }
-    
-    static function enable_errors() {
-        ini_set('display_errors', 1);
-    }
-    static function disable_errors() {
-        ini_set('display_errors', 0);
     }
 }
