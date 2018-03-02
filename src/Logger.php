@@ -19,7 +19,7 @@ class Logger {
     /**
      * Write log to cli / browser?
      * 
-     * @var int
+     * @var bool
      */
     static public $output = true;
     
