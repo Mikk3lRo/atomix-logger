@@ -4,9 +4,46 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b45aa54e147567f5115206c0eafc944b",
-    "content-hash": "e59e2524f90d4fa0ee303924260998ba",
-    "packages": [],
+    "hash": "306a3b3815df480cced70690ac7879ba",
+    "content-hash": "5c4927e7271e3d8bd62851e77c2043fc",
+    "packages": [
+        {
+            "name": "mikk3lro/atomix/settings",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://Mikk3lRo@bitbucket.org/ozcoding/atomix_settings.git",
+                "reference": "f83d9fb960769694ce7c31d3e069f25e1aecd9bf"
+            },
+            "archive": {
+                "exclude": [
+                    "/tests/"
+                ]
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mikk3lRo\\atomix\\system\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "/tests/"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mikk3lRo",
+                    "email": "mikk3lro@gmail.com"
+                }
+            ],
+            "time": "2018-03-15 17:23:44"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1468,7 +1505,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mikk3lro/atomix/settings": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
