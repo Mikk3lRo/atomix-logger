@@ -1,6 +1,8 @@
 <?php
 namespace Mikk3lRo\atomix\io;
 
+use Mikk3lRo\atomix\system\DirConf;
+
 class Logger {
     /**
      * Keeps track of the current indent level
@@ -24,58 +26,28 @@ class Logger {
     static public $output = true;
     
     /**
-     * This has precedence over the LOG_FILENAME and LOG_BASENAME constants
+     * The absolute path to the file we want to write to - or false for none
      * 
      * @var string 
      */
-    static private $_log_filename = null;
+    static private $_log_filename = false;
     
     /**
-     * Overrules the LOG_FILENAME and LOG_PATH / LOG_BASENAME constants.
+     * Set the log filename
      * 
-     * @param mixed $filename A relative (to LOG_PATH) filename, or an absolute filename, or false to disable logging to file completely.
+     * @param mixed $filename A relative (to `DirConf::get('log')`) filename, or an absolute filename, or false to disable logging to file completely.
      */
     static public function set_log_filename($filename) {
         if (!is_string($filename)) {
             self::$_log_filename = false;
         }
         if (substr($filename, 0, 1) !== '/') {
-            self::$_log_filename = self::get_log_path() . '/' . $filename;
+            self::$_log_filename = DirConf::get('log') . '/' . $filename;
         } else {
             self::$_log_filename = $filename;
         }
     }
-
-    /**
-     * Get the log (base) name
-     * 
-     * @return string
-     */
-    static private function get_log_filename() {
-        if (is_string(self::$_log_filename)) {
-            return self::$_log_filename;
-        }
-        if (defined('LOG_FILENAME')) {
-            return LOG_FILENAME;
-        }
-        if (defined('LOG_BASENAME')) {
-            return self::get_log_path() . '/' . LOG_BASENAME;
-        }
-        return false;
-    }
-
-    /**
-     * Get the log path
-     * 
-     * @return string
-     */
-    static private function get_log_path() {
-        if (defined('LOG_PATH')) {
-            return LOG_PATH;
-        }
-        return '~/log';
-    }
-
+    
     /**
      * Appends to a flat logfile (if enabled), and outputs to browser / cli (if enabled)
      *  
@@ -100,10 +72,8 @@ class Logger {
 
         $output = $log_time . $log_ident . ' ' . $log_indent . $log_string . "\n";
         
-        $log_filename = self::get_log_filename();
-        
-        if (is_string($log_filename)) {
-            file_put_contents($log_filename, $output, FILE_APPEND);
+        if (is_string(self::$_log_filename)) {
+            file_put_contents(self::$_log_filename, $output, FILE_APPEND);
         }
         if (self::$output) {
             echo $output;
