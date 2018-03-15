@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "306a3b3815df480cced70690ac7879ba",
-    "content-hash": "5c4927e7271e3d8bd62851e77c2043fc",
+    "hash": "a9f364f59a2b8f12c8723ccc03c2b9ff",
+    "content-hash": "acdc1e6707523600d43c76cfd76a1bea",
     "packages": [
         {
             "name": "mikk3lro/atomix/settings",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://Mikk3lRo@bitbucket.org/ozcoding/atomix_settings.git",
+                "url": "https://bitbucket.org/ozcoding/atomix_settings.git",
                 "reference": "f83d9fb960769694ce7c31d3e069f25e1aecd9bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/ozcoding/atomix_settings/get/f83d9fb960769694ce7c31d3e069f25e1aecd9bf.zip",
+                "reference": "f83d9fb960769694ce7c31d3e069f25e1aecd9bf",
+                "shasum": ""
             },
             "archive": {
                 "exclude": [
