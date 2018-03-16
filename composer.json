@@ -17,8 +17,8 @@
     },
     "repositories": [
         {
-            "type": "git",
-            "url": "https://bitbucket.org/ozcoding/atomix_settings.git"
+            "type": "composer",
+            "url": "https://satis.testtest.org"
         }
     ],
     "require": {
