@@ -4,22 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a9f364f59a2b8f12c8723ccc03c2b9ff",
-    "content-hash": "acdc1e6707523600d43c76cfd76a1bea",
+    "hash": "7cce7e216f255b6c6567aead368d6e78",
+    "content-hash": "a045d21f57dd7fc8eb8ce267744043dd",
     "packages": [
         {
             "name": "mikk3lro/atomix/settings",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/ozcoding/atomix_settings.git",
-                "reference": "f83d9fb960769694ce7c31d3e069f25e1aecd9bf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://bitbucket.org/ozcoding/atomix_settings/get/f83d9fb960769694ce7c31d3e069f25e1aecd9bf.zip",
-                "reference": "f83d9fb960769694ce7c31d3e069f25e1aecd9bf",
-                "shasum": ""
+                "reference": "438d4ded5fdc18ca3151a696e93a350678f01027"
             },
             "archive": {
                 "exclude": [
@@ -47,7 +41,7 @@
                     "email": "mikk3lro@gmail.com"
                 }
             ],
-            "time": "2018-03-15 17:23:44"
+            "time": "2018-03-15 21:41:22"
         }
     ],
     "packages-dev": [
@@ -1511,9 +1505,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mikk3lro/atomix/settings": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
