@@ -15,6 +15,7 @@ else
     mkdir /tmp/satisrepo;
     cd /tmp/satisrepo;
     git clone git@bitbucket.org:Mikk3lRo/mikk3lro.bitbucket.io.git;
+    cd mikk3lro.bitbucket.io;
     git config user.name "Automagic";
     git config user.email "mikk3lro@gmail.com";
     LOGMSG=$(date && echo " Triggered by $BITBUCKET_REPO_SLUG")
