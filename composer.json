@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://satis.testtest.org"
+            "url": "https://mikk3lro.bitbucket.io/satis"
         }
     ],
     "require": {
