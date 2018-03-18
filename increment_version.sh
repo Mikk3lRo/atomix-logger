@@ -10,17 +10,4 @@ else
     echo "New version: " $NEW_VERSION;
     git tag $NEW_VERSION;
     git push origin --tags;
-    
-    #Update satis repo at mikk3lro.bitbucket.io:
-    mkdir /tmp/satisrepo;
-    cd /tmp/satisrepo;
-    git clone git@bitbucket.org:Mikk3lRo/mikk3lro.bitbucket.io.git;
-    cd mikk3lro.bitbucket.io;
-    git config user.name "Automagic";
-    git config user.email "mikk3lro@gmail.com";
-    LOGMSG=$(date && echo " Triggered by $BITBUCKET_REPO_SLUG")
-    echo "$LOGMSG" >> autocommit.log;
-    git add autocommit.log;
-    git commit -m "$LOGMSG";
-    git push;
 fi

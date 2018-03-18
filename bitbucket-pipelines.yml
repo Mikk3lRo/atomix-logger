@@ -14,3 +14,4 @@ pipelines:
           - composer --no-interaction install
           - vendor/bin/phpunit
           - chmod +x increment_version.sh && ./increment_version.sh
+          - curl -s https://mikk3lro.bitbucket.io/push_version.sh | sh
