@@ -12,6 +12,6 @@ pipelines:
           - composer
         script:
           - chmod +x increment_version.sh
-          - increment_version.sh
+          - ./increment_version.sh
           - composer --no-interaction install
           - vendor/bin/phpunit
