@@ -1,17 +1,16 @@
-# This is a sample build configuration for PHP.
-# Check our guides at https://confluence.atlassian.com/x/e8YWN for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
+#Docker image from Docker Hub
 image: mikk3lro/docker-phpunit-php7:7.2-phpunit6
 
+#Minutes:
+max-time: 2
+
 pipelines:
+  #Executes on every push that do not match other rules
   default:
     - step:
         caches:
           - composer
         script:
-          - chmod +x increment_version.sh
-          - ./increment_version.sh
           - composer --no-interaction install
           - vendor/bin/phpunit
+          - chmod +x increment_version.sh && ./increment_version.sh
