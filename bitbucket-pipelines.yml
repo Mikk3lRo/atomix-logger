@@ -11,5 +11,6 @@ pipelines:
         caches:
           - composer
         script:
+          - increment_version.sh
           - composer --no-interaction install
           - vendor/bin/phpunit
