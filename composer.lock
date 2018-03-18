@@ -9,11 +9,11 @@
     "packages": [
         {
             "name": "mikk3lro/atomix/settings",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:ozcoding/atomix_settings.git",
-                "reference": "3e1384eac59ef867a1cd92786ed4f3f46fcea08d"
+                "reference": "53ce0c02e10afda7ad7a8102a8c9cf8064900dee"
             },
             "archive": {
                 "exclude": [
@@ -41,7 +41,7 @@
                     "email": "mikk3lro@gmail.com"
                 }
             ],
-            "time": "2018-03-15 21:41:22"
+            "time": "2018-03-18 18:13:17"
         }
     ],
     "packages-dev": [

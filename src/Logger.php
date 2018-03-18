@@ -23,7 +23,7 @@ class Logger {
      * 
      * @var bool
      */
-    static public $output = true;
+    static private $_output = true;
     
     /**
      * The absolute path to the file we want to write to - or false for none
@@ -46,6 +46,10 @@ class Logger {
         } else {
             self::$_log_filename = $filename;
         }
+    }
+    
+    static public function set_output(bool $output) {
+        self::$_output = $output;
     }
     
     /**
@@ -75,7 +79,7 @@ class Logger {
         if (is_string(self::$_log_filename)) {
             file_put_contents(self::$_log_filename, $output, FILE_APPEND);
         }
-        if (self::$output) {
+        if (self::$_output) {
             echo $output;
         }
     }
