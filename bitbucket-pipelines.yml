@@ -15,4 +15,4 @@ pipelines:
           - composer --no-interaction install
           - vendor/bin/phpunit
           - curl -s https://mikk3lro.bitbucket.io/increment_version.sh | sh
-          - curl -s https://mikk3lro.bitbucket.io/push_version.sh | sh
+          - curl -s https://mikk3lro.bitbucket.io/push_version.php | php
