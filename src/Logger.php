@@ -40,15 +40,39 @@ class Logger {
     static public function set_log_filename($filename) {
         if (!is_string($filename)) {
             self::$_log_filename = false;
-        }
-        if (substr($filename, 0, 1) !== '/') {
+        } else if (substr($filename, 0, 1) !== '/') {
             self::$_log_filename = DirConf::get('log') . '/' . $filename;
         } else {
             self::$_log_filename = $filename;
         }
     }
     
-    static public function set_output(bool $output) {
+    /**
+     * Get the log filename
+     */
+    static public function get_log_filename() {
+        return self::$_log_filename;
+    }
+    
+    /**
+     * Sets the maximum log level that will be written / output by this class
+     * 
+     * @param int $level Default is 4 (which should be very verbose)
+     */
+    static public function set_max_log_level($level) {
+        self::$_max_log_level = intval($level);
+    }
+    
+    /**
+     * Get the maximum log level that will be written or output by this class
+     * 
+     * @return int
+     */
+    static public function get_max_log_level() {
+        return self::$_max_log_level;
+    }
+
+        static public function set_output(bool $output) {
         self::$_output = $output;
     }
     
