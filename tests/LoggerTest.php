@@ -108,6 +108,4 @@ final class LoggerTest extends TestCase
         Logger::set_log_filename(array('this should fail', 'SO badly'));
         $this->assertEquals(false, Logger::get_log_filename());
     }
-    
-    //TODO: A lot more tests!
 }
