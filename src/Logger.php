@@ -2,11 +2,13 @@
 namespace Mikk3lRo\atomix\io;
 
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerTrait;
+use Psr\Log\LoggerInterface;
 use Mikk3lRo\atomix\system\DirConf;
 use Mikk3lRo\atomix\io\Formatters;
 
-class Logger {
-    use \Psr\Log\LoggerTrait;
+class Logger implements LoggerInterface {
+    use LoggerTrait;
 
     /**
      * Keeps track of the current indent level
