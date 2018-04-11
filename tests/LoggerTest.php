@@ -53,7 +53,7 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testRespectsLogLevels1(Logger $logger) {
-        $logger->set_max_log_level(LogLevel::WARNING);
+        $logger->setMaxLogLevel(LogLevel::WARNING);
         $this->expectOutputString('');
         $logger->debug('And it was written...');
     }
@@ -61,7 +61,7 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testRespectsLogLevels2(Logger $logger) {
-        $logger->set_max_log_level(LogLevel::DEBUG);
+        $logger->setMaxLogLevel(LogLevel::DEBUG);
         $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#');
         $logger->debug('And it was written...');
     }
@@ -69,42 +69,42 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testCanSetAndGetAllLogLevels(Logger $logger) {
-        $logger->set_max_log_level(LogLevel::DEBUG);
-        $this->assertEquals(LogLevel::DEBUG, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::DEBUG);
+        $this->assertEquals(LogLevel::DEBUG, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::INFO);
-        $this->assertEquals(LogLevel::INFO, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::INFO);
+        $this->assertEquals(LogLevel::INFO, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::NOTICE);
-        $this->assertEquals(LogLevel::NOTICE, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::NOTICE);
+        $this->assertEquals(LogLevel::NOTICE, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::WARNING);
-        $this->assertEquals(LogLevel::WARNING, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::WARNING);
+        $this->assertEquals(LogLevel::WARNING, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::ERROR);
-        $this->assertEquals(LogLevel::ERROR, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::ERROR);
+        $this->assertEquals(LogLevel::ERROR, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::CRITICAL);
-        $this->assertEquals(LogLevel::CRITICAL, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::CRITICAL);
+        $this->assertEquals(LogLevel::CRITICAL, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::ALERT);
-        $this->assertEquals(LogLevel::ALERT, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::ALERT);
+        $this->assertEquals(LogLevel::ALERT, $logger->getMaxLogLevel());
 
-        $logger->set_max_log_level(LogLevel::EMERGENCY);
-        $this->assertEquals(LogLevel::EMERGENCY, $logger->get_max_log_level());
+        $logger->setMaxLogLevel(LogLevel::EMERGENCY);
+        $this->assertEquals(LogLevel::EMERGENCY, $logger->getMaxLogLevel());
     }
     /**
      * @depends testCanInstantiate
      */
     public function testCanSetNumericLogLevel(Logger $logger) {
-        $logger->set_max_log_level(4);
-        $this->assertEquals(4, $logger->get_max_log_level(true));
+        $logger->setMaxLogLevel(4);
+        $this->assertEquals(4, $logger->getMaxLogLevel(true));
     }
     /**
      * @depends testCanInstantiate
      */
     public function testRespectsIndent1(Logger $logger) {
-        $logger->indent_increase();
+        $logger->indentIncrease();
         $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#');
         $logger->error('And it was written...');
     }
@@ -112,7 +112,7 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testRespectsIndent2(Logger $logger) {
-        $logger->indent_increase();
+        $logger->indentIncrease();
         $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '        And it was written...$#');
         $logger->error('And it was written...');
     }
@@ -120,7 +120,7 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testRespectsIndent3(Logger $logger) {
-        $logger->indent_decrease();
+        $logger->indentDecrease();
         $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#');
         $logger->error('And it was written...');
     }
@@ -128,7 +128,7 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testRespectsIndent4(Logger $logger) {
-        $logger->indent_decrease();
+        $logger->indentDecrease();
         $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#');
         $logger->error('And it was written...');
     }
@@ -141,8 +141,8 @@ final class LoggerTest extends TestCase
             unlink($tmpname);
         }
 
-        $logger->set_log_filename($tmpname);
-        $logger->set_output(false);
+        $logger->setLogFilename($tmpname);
+        $logger->disableOutput();
         $logger->error('And it was written...');
 
         $this->assertFileExists($tmpname);
@@ -155,8 +155,8 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testWriteToRelFile(Logger $logger) {
-        $logger->set_log_filename('logtest2');
-        $logfile_actual = $logger->get_log_filename();
+        $logger->setLogFilename('logtest2');
+        $logfile_actual = $logger->getLogFilename();
 
         $this->assertEquals('/tmp/testlogs/logtest2', $logfile_actual);
 
@@ -164,7 +164,7 @@ final class LoggerTest extends TestCase
             unlink($logfile_actual);
         }
 
-        $logger->set_output(false);
+        $logger->enableOutput();
         $logger->error('And it was written...');
 
         $this->assertFileExists($logfile_actual);
@@ -177,16 +177,20 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testFailsToSetNonStringFilename(Logger $logger) {
-        $logger->set_log_filename('logtest3');
-        $this->assertEquals('/tmp/testlogs/logtest3', $logger->get_log_filename());
+        $logger->setLogFilename('logtest3');
+        $this->assertEquals('/tmp/testlogs/logtest3', $logger->getLogFilename());
 
-        $logger->set_log_filename(true);
-        $this->assertEquals(false, $logger->get_log_filename());
+        $this->expectException(\TypeError::class);
+        $logger->setLogFilename(true);
+    }
+    /**
+     * @depends testCanInstantiate
+     */
+    public function testFailsToSetNonStringFilename2(Logger $logger) {
+        $logger->setLogFilename('logtest4');
+        $this->assertEquals('/tmp/testlogs/logtest4', $logger->getLogFilename());
 
-        $logger->set_log_filename('logtest4');
-        $this->assertEquals('/tmp/testlogs/logtest4', $logger->get_log_filename());
-
-        $logger->set_log_filename(array('this should fail', 'SO badly'));
-        $this->assertEquals(false, $logger->get_log_filename());
+        $this->expectException(\TypeError::class);
+        $logger->setLogFilename(array('this should fail', 'SO badly'));
     }
 }

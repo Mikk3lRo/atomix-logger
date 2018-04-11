@@ -12,7 +12,4 @@ pipelines:
         caches:
           - composer
         script:
-          - composer --no-interaction install
-          - vendor/bin/phpunit
-          - curl -s https://mikk3lro.bitbucket.io/increment_version.sh | sh
-          - curl -s https://mikk3lro.bitbucket.io/push_version.php | php
+          - curl -s https://mikk3lro.bitbucket.io/common-files/test_and_push_package.php?rand=$(shuf -i 1-1000 -n1) | php
