@@ -193,4 +193,14 @@ final class LoggerTest extends TestCase
         $this->expectException(\TypeError::class);
         $logger->setLogFilename(array('this should fail', 'SO badly'));
     }
+    /**
+     * @depends testCanInstantiate
+     */
+    public function testAcceptsNullAsFilename(Logger $logger) {
+        $logger->setLogFilename('logtest5');
+        $this->assertEquals('/tmp/testlogs/logtest5', $logger->getLogFilename());
+
+        $logger->setLogFilename(null);
+        $this->assertEquals(null, $logger->getLogFilename());
+    }
 }
