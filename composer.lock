@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "259396b74922e0d2afa48a7257b8a9a5",
+    "content-hash": "a453429d753b67e7d458c1b1eba7c7a6",
     "packages": [
         {
             "name": "mikk3lro/atomix/converters",
-            "version": "0.0.14",
+            "version": "0.0.18",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:ozcoding/atomix_converters.git",
-                "reference": "74ad58d1f7ddc958680d40e16be2980f3cb0790b"
+                "reference": "fe0edded285991fec743aadb03f69ebca0fe6e33"
             },
             "archive": {
                 "exclude": [
@@ -20,10 +20,11 @@
                 ]
             },
             "require": {
-                "mikk3lro/atomix/i18n": "~0.0.1"
+                "mikk3lro/atomix/i18n": "~0.1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6"
+                "phpunit/phpunit": "^6",
+                "squizlabs/php_codesniffer": "~3.3@dev"
             },
             "type": "library",
             "autoload": {
@@ -43,15 +44,15 @@
                     "email": "mikk3lro@gmail.com"
                 }
             ],
-            "time": "2018-04-02T14:43:54+00:00"
+            "time": "2018-04-11T06:59:48+00:00"
         },
         {
             "name": "mikk3lro/atomix/i18n",
-            "version": "0.0.1",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:ozcoding/atomix_i18n.git",
-                "reference": "92f9dac7b32920497fa97ee1659def10c9c06dca"
+                "reference": "f073d837d3f192e147fb4a1a833051bb8ce8c58e"
             },
             "archive": {
                 "exclude": [
@@ -59,7 +60,8 @@
                 ]
             },
             "require-dev": {
-                "phpunit/phpunit": "^6"
+                "phpunit/phpunit": "^6",
+                "squizlabs/php_codesniffer": "~3.3@dev"
             },
             "type": "library",
             "autoload": {
@@ -79,7 +81,7 @@
                     "email": "mikk3lro@gmail.com"
                 }
             ],
-            "time": "2018-03-19T20:13:26+00:00"
+            "time": "2018-04-11T06:56:17+00:00"
         },
         {
             "name": "mikk3lro/atomix/settings",
@@ -833,16 +835,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "6.5.7",
+            "version": "6.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6bd77b57707c236833d2b57b968e403df060c9d9"
+                "reference": "4f21a3c6b97c42952fd5c2837bb354ec0199b97b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6bd77b57707c236833d2b57b968e403df060c9d9",
-                "reference": "6bd77b57707c236833d2b57b968e403df060c9d9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4f21a3c6b97c42952fd5c2837bb354ec0199b97b",
+                "reference": "4f21a3c6b97c42952fd5c2837bb354ec0199b97b",
                 "shasum": ""
             },
             "require": {
@@ -913,7 +915,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-02-26T07:01:09+00:00"
+            "time": "2018-04-10T11:38:34+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1539,12 +1541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "e8420e7b44fd17d1e4c095df742cc56b98899439"
+                "reference": "c6a0298d96abcf99e475c1cd0707c4830e0687a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/e8420e7b44fd17d1e4c095df742cc56b98899439",
-                "reference": "e8420e7b44fd17d1e4c095df742cc56b98899439",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/c6a0298d96abcf99e475c1cd0707c4830e0687a3",
+                "reference": "c6a0298d96abcf99e475c1cd0707c4830e0687a3",
                 "shasum": ""
             },
             "require": {
@@ -1582,7 +1584,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-04-06T03:42:39+00:00"
+            "time": "2018-04-13T03:26:13+00:00"
         },
         {
             "name": "theseer/tokenizer",

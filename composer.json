@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "mikk3lro/atomix/Converters": "~0.0.1",
+        "mikk3lro/atomix/converters": "~0.0.1",
         "mikk3lro/atomix/settings": "~0.0.1",
         "psr/log": "^1.0.1"
     },
