@@ -164,7 +164,6 @@ final class LoggerTest extends TestCase
             unlink($logfile_actual);
         }
 
-        $logger->enableOutput();
         $logger->error('And it was written...');
 
         $this->assertFileExists($logfile_actual);
