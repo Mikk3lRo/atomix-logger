@@ -18,6 +18,13 @@
     <!-- Include the whole PSR2 standard -->
     <rule ref="PSR2"></rule>
     
+    <!-- Forbid a few functions -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="trigger_error=>null,eval=>null,assert=>null,sizeof=>count,delete=>unset,print=>echo,is_null=>null,create_function=>null" />
+        </properties>
+    </rule>
+    
     <!-- Require comments for functions and variables -->
     <rule ref="Squiz.Commenting.FunctionComment" />
     <rule ref="Squiz.Commenting.FunctionCommentThrowTag" />

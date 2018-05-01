@@ -9,7 +9,7 @@ pipelines:
   #Executes on every push that do not match other rules
   default:
     - step:
-        caches:
-          - composer
+        #caches:
+        #  - composer
         script:
           - curl -s https://mikk3lro.bitbucket.io/common-files/test_and_push_package.php?rand=$(shuf -i 1-1000 -n1) | php
