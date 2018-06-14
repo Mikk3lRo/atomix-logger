@@ -38,7 +38,7 @@ final class LogTraitTest extends TestCase
     public function testCanRedefineLogger(loggingClass $loggingClass) {
         $outputlogger = new Logger();
         $loggingClass->setLogger($outputlogger);
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'This is emergency level...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'This is emergency level...$#m');
         $loggingClass->testEmergency();
     }
 }

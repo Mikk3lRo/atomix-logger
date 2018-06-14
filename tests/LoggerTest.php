@@ -22,14 +22,14 @@ final class LoggerTest extends TestCase
      * @depends testCanInstantiate
      */
     public function testCanWrite(Logger $logger) {
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#m');
         $logger->error('And it was written...');
     }
     /**
      * @depends testCanInstantiate
      */
     public function testCanWriteNonString1(Logger $logger) {
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'false$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'false$#m');
         $logger->error(false);
     }
     /**
@@ -96,6 +96,34 @@ final class LoggerTest extends TestCase
     /**
      * @depends testCanInstantiate
      */
+    public function testCanSetAndGetAllBacktraceLevels(Logger $logger) {
+        $logger->setMaxBacktraceLevel(LogLevel::DEBUG);
+        $this->assertEquals(LogLevel::DEBUG, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::INFO);
+        $this->assertEquals(LogLevel::INFO, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::NOTICE);
+        $this->assertEquals(LogLevel::NOTICE, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::WARNING);
+        $this->assertEquals(LogLevel::WARNING, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::ERROR);
+        $this->assertEquals(LogLevel::ERROR, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::CRITICAL);
+        $this->assertEquals(LogLevel::CRITICAL, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::ALERT);
+        $this->assertEquals(LogLevel::ALERT, $logger->getMaxBacktraceLevel());
+
+        $logger->setMaxBacktraceLevel(LogLevel::EMERGENCY);
+        $this->assertEquals(LogLevel::EMERGENCY, $logger->getMaxBacktraceLevel());
+    }
+    /**
+     * @depends testCanInstantiate
+     */
     public function testCanSetNumericLogLevel(Logger $logger) {
         $logger->setMaxLogLevel(4);
         $this->assertEquals(4, $logger->getMaxLogLevel(true));
@@ -103,9 +131,16 @@ final class LoggerTest extends TestCase
     /**
      * @depends testCanInstantiate
      */
+    public function testCanSetNumericBacktraceLevel(Logger $logger) {
+        $logger->setMaxBacktraceLevel(3);
+        $this->assertEquals(3, $logger->getMaxBacktraceLevel(true));
+    }
+    /**
+     * @depends testCanInstantiate
+     */
     public function testRespectsIndent1(Logger $logger) {
         $logger->indentIncrease();
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#m');
         $logger->error('And it was written...');
     }
     /**
@@ -113,7 +148,7 @@ final class LoggerTest extends TestCase
      */
     public function testRespectsIndent2(Logger $logger) {
         $logger->indentIncrease();
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '        And it was written...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '        And it was written...$#m');
         $logger->error('And it was written...');
     }
     /**
@@ -121,7 +156,7 @@ final class LoggerTest extends TestCase
      */
     public function testRespectsIndent3(Logger $logger) {
         $logger->indentDecrease();
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . '    And it was written...$#m');
         $logger->error('And it was written...');
     }
     /**
@@ -129,7 +164,7 @@ final class LoggerTest extends TestCase
      */
     public function testRespectsIndent4(Logger $logger) {
         $logger->indentDecrease();
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#');
+        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'And it was written...$#m');
         $logger->error('And it was written...');
     }
     /**
@@ -147,7 +182,7 @@ final class LoggerTest extends TestCase
 
         $this->assertFileExists($tmpname);
 
-        $this->assertRegExp('#^' . $this->log_pcre_prefix . 'And it was written...$#', file_get_contents($tmpname));
+        $this->assertRegExp('#^' . $this->log_pcre_prefix . 'And it was written...$#m', file_get_contents($tmpname));
 
         unlink($tmpname);
     }
@@ -168,7 +203,7 @@ final class LoggerTest extends TestCase
 
         $this->assertFileExists($logfile_actual);
 
-        $this->assertRegExp('#^' . $this->log_pcre_prefix . 'And it was written...$#', file_get_contents($logfile_actual));
+        $this->assertRegExp('#^' . $this->log_pcre_prefix . 'And it was written...$#m', file_get_contents($logfile_actual));
 
         unlink($logfile_actual);
     }
@@ -201,5 +236,78 @@ final class LoggerTest extends TestCase
 
         $logger->setLogFilename(null);
         $this->assertEquals(null, $logger->getLogFilename());
+    }
+
+
+    /**
+     * @depends testCanInstantiate
+     */
+    public function testCanProduceBacktrace(Logger $logger) {
+        $logger->setLogFilename(null);
+        $logger->enableOutput();
+
+        ob_start();
+        $logger->setMaxBacktraceLevel(LogLevel::ERROR);
+        $logger->warning('This should have no backtrace');
+
+        $logger->setMaxBacktraceLevel(LogLevel::WARNING);
+        $logger->warning('This should have a backtrace');
+
+        $output = ob_get_clean();
+
+        $this->assertRegExp('#^.*\[warning\] This should have no backtrace\n.*\[warning\] This should have a backtrace\n\s+In.*\n\s+1.*#m', $output);
+
+        $logger->setMaxBacktraceLevel(LogLevel::ERROR);
+    }
+
+
+    /**
+     * @depends testCanInstantiate
+     */
+    public function testCanPassExceptionBacktrace(Logger $logger) {
+        $logger->setLogFilename(null);
+        $logger->enableOutput();
+
+        ob_start();
+
+
+        function thisFunctionThrowsAnException() {
+            throw new \Exception('Exception message');
+        }
+        function thisFunctionCallsAFunctionThatThrowsAnException() {
+            thisFunctionThrowsAnException();
+        }
+        try {
+            thisFunctionCallsAFunctionThatThrowsAnException();
+        } catch (\Exception $ex) {
+            $logger->error('An exception occured: ' . $ex->getMessage(), array(
+                'exception' => $ex
+            ));
+        }
+
+        $output = ob_get_clean();
+
+        $this->assertRegExp('#^.*\[error] An exception occured: Exception message\n\s+In.*\n\s+1.*#m', $output);
+    }
+
+    /**
+     * @depends testCanInstantiate
+     */
+    public function testCanBacktraceGlobalFunction(Logger $logger) {
+        $logger->setLogFilename(null);
+        $logger->enableOutput();
+
+        function thisIsAGlobalFunction(Logger $logger) {
+            $logger->critical('Critical error test');
+        }
+
+        ob_start();
+        thisIsAGlobalFunction($logger);
+        $output = ob_get_clean();
+
+        $this->assertRegExp('#^.*\[critical\] Critical error test\n\s+In.*\n\s+1. thisIsAGlobalFunction#m', $output);
+
+        $logger->setMaxBacktraceLevel(LogLevel::ERROR);
+
     }
 }

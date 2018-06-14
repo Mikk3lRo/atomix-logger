@@ -20,11 +20,19 @@ class Logger implements LoggerInterface
 
     /**
      * Anything above this value will be ignored
-     * - default WARNING (ie. debug, info, notice are ignored)
+     * - default WARNING (debug, info and notice are ignored)
      *
      * @var integer
      */
     private $maxLogLevel = 4;
+
+    /**
+     * Anything above this value will not provide a backtrace (unless an exception "explicitly" passed)
+     * - default ERROR (error, critical, alert and emergency provide backtraces)
+     *
+     * @var integer
+     */
+    private $maxBacktraceLevel = 3;
 
     /**
      * Write log to cli / browser?
@@ -97,6 +105,35 @@ class Logger implements LoggerInterface
             return self::stringLogLevel($this->maxLogLevel);
         }
         return $this->maxLogLevel;
+    }
+
+
+    /**
+     * Set the maximum log level that will provide a backtrace.
+     *
+     * @param string|integer $level The maximum log level. Can be passed as string or integer.
+     *
+     * @return void
+     */
+    public function setMaxBacktraceLevel($level) : void
+    {
+        $this->maxBacktraceLevel = self::numericLogLevel($level);
+    }
+
+
+    /**
+     * Get the maximum log level that will provide a backtrace.
+     *
+     * @param boolean $asInt If true the log level is returned as an integer.
+     *
+     * @return string|integer The maximum log level.
+     */
+    public function getMaxBacktraceLevel(bool $asInt = false)
+    {
+        if ($asInt === false) {
+            return self::stringLogLevel($this->maxBacktraceLevel);
+        }
+        return $this->maxBacktraceLevel;
     }
 
 
@@ -190,6 +227,8 @@ class Logger implements LoggerInterface
     /**
      * Appends to a flat file (if enabled), and outputs to browser / cli (if enabled)
      *
+     * Pass an exception in the $context array to provide a debug backtrace.
+     *
      * @param string|integer $level   One of the constants from Psr\Log\LogLevel or the equivalent integer value.
      * @param string|mixed   $message What to log - normally a string, though anything castable to a string will work.
      * @param array          $context An array of substitutions to make in the passed string.
@@ -219,9 +258,32 @@ class Logger implements LoggerInterface
         $logIdent = str_pad('[' . getmypid() . ']', 8, ' ', STR_PAD_LEFT);
         $logLevelString = str_pad('[' . $level . ']', 11, ' ', STR_PAD_LEFT);
         $logIndent = $this->indent();
-        $logString = str_replace("\n", "\n" . $logIndent . str_repeat(' ', 41), trim($message));
+        $logPrefix = $logTime . $logIdent . $logLevelString . ' ' . $logIndent;
+        $newLineIndent = "\n" . str_repeat(' ', strlen($logPrefix));
 
-        $output = $logTime . $logIdent . $logLevelString . ' ' . $logIndent . $logString . "\n";
+        $logString = str_replace("\n", $newLineIndent, trim($message));
+
+        if (isset($context['exception']) && $context['exception'] instanceof \Exception) {
+            $file = $context['exception']->getFile();
+            $line = $context['exception']->getLine();
+            if ($file && $line) {
+                $logString .= $newLineIndent . 'In ' . $file . ':' . $line;
+            } else {
+                $logString .= $newLineIndent . 'In unknown file and line'; // @codeCoverageIgnore
+            }
+            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, self::logTraceString($context['exception']->getTrace()));
+        } else if ($levelInt <= $this->getMaxBacktraceLevel(true)) {
+            $trace = self::getLogTraceArray();
+            $first = array_shift($trace);
+            if (isset($first['file']) && isset($first['line'])) {
+                $logString .= $newLineIndent . 'In ' . $first['file'] . ':' . $first['line'];
+            } else {
+                $logString .= $newLineIndent . 'In unknown file and line'; // @codeCoverageIgnore
+            }
+            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, self::logTraceString($trace));
+        }
+
+        $output = $logPrefix . $logString . "\n";
 
         if (is_string($this->logFilename)) {
             file_put_contents($this->logFilename, $output, FILE_APPEND);
@@ -229,6 +291,82 @@ class Logger implements LoggerInterface
         if ($this->output) {
             echo $output;
         }
+    }
+
+
+    /**
+     * Get a default debug backtrace with functions belonging to this class removed.
+     *
+     * @return array
+     */
+    public static function getLogTraceArray() : array
+    {
+        $trace = debug_backtrace();
+
+        $retval = array();
+
+        $leftLoggerClass = false;
+
+        foreach ($trace as $entryId => $entry) {
+            if (empty($entry['class']) || $entry['class'] !== __CLASS__) {
+                $leftLoggerClass = true;
+            }
+            if (!$leftLoggerClass) {
+                if (isset($trace[$entryId - 1])) {
+                    unset($trace[$entryId - 1]);
+                }
+            }
+        }
+        return array_values($trace);
+    }
+
+
+    /**
+     * Convert a backtrace array to a string.
+     *
+     * @param array   $trace     The backtrace array - for example from debug_backtrace.
+     * @param integer $maxLength The maximum number of "steps" to return.
+     *
+     * @return string
+     */
+    public static function logTraceString(array $trace, int $maxLength = 6) : string
+    {
+        $retval = array();
+        foreach ($trace as $entryId => $entry) {
+            $function = $entry['function'];
+            if (isset($entry['class']) && !empty($entry['class'])) {
+                $function = $entry['class'] . (isset($entry['type']) ? $entry['type'] : '->') . $function;
+            }
+
+            if (isset($entry['args']) && !empty($entry['args'])) {
+                $args = array();
+                foreach ($entry['args'] as $arg) {
+                    $args[] = gettype($arg);
+                }
+                $function .= '(' . implode(', ', $args) . ')';
+            } else {
+                $function .= '()';
+            }
+
+            $position = 'filename and line unknown';
+            if (isset($entry['file'])) {
+                $position = $entry['file'];
+            }
+            if (isset($entry['line'])) {
+                $position .= ':' . $entry['line'];
+            }
+
+            $retval[] = sprintf('%3s. %s - %s', $entryId + 1, $function, $position);
+
+            if (count($retval) >= $maxLength) {
+                $omitted = (count($trace) - $maxLength);
+                if ($omitted > 0) {
+                    $retval[] = '(...' . $omitted . ' more omitted...)';
+                }
+                break;
+            }
+        }
+        return implode("\n", $retval);
     }
 
 
@@ -242,7 +380,7 @@ class Logger implements LoggerInterface
         $this->indent += 4;
     }
 
-    
+
     /**
      * Decreases the log indentation by 4 spaces.
      *
