@@ -3,7 +3,7 @@ image: mikk3lro/docker-phpunit-php7:7.2-new
 
 options:
   #Minutes:
-  max-time: 2
+  max-time: 4
 
 pipelines:
   #Executes on every push that do not match other rules
