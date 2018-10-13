@@ -4,10 +4,8 @@ namespace Mikk3lRo\atomix\io;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LoggerInterface;
-use Mikk3lRo\atomix\system\DirConf;
-use Mikk3lRo\atomix\io\Formatters;
 
-class Logger implements LoggerInterface
+abstract class AbstractLogger implements LoggerInterface
 {
     use LoggerTrait;
 
@@ -34,50 +32,6 @@ class Logger implements LoggerInterface
      */
     private $maxBacktraceLevel = 3;
 
-    /**
-     * Write log to cli / browser?
-     *
-     * @var boolean
-     */
-    private $output = true;
-
-    /**
-     * The absolute path to the file we want to write to - or false for none.
-     *
-     * @var string
-     */
-    private $logFilename = false;
-
-
-    /**
-     * Set the log filename
-     *
-     * @param string $filename A relative (to `DirConf::get('log')`) filename, or an absolute filename, or null to disable logging to file completely.
-     *
-     * @return void
-     */
-    public function setLogFilename(?string $filename) : void
-    {
-        if (!is_string($filename)) {
-            $this->logFilename = null;
-        } else if (substr($filename, 0, 1) !== '/') {
-            $this->logFilename = DirConf::get('log') . '/' . $filename;
-        } else {
-            $this->logFilename = $filename;
-        }
-    }
-
-
-    /**
-     * Get the log filename
-     *
-     * @return string|null Returns the log filename or null if not logging to a file
-     */
-    public function getLogFilename() : ?string
-    {
-        return $this->logFilename;
-    }
-
 
     /**
      * Set the maximum log level that will be written / output by this class
@@ -88,7 +42,7 @@ class Logger implements LoggerInterface
      */
     public function setMaxLogLevel($level) : void
     {
-        $this->maxLogLevel = self::numericLogLevel($level);
+        $this->maxLogLevel = $this->numericLogLevel($level);
     }
 
 
@@ -102,7 +56,7 @@ class Logger implements LoggerInterface
     public function getMaxLogLevel(bool $asInt = false)
     {
         if ($asInt === false) {
-            return self::stringLogLevel($this->maxLogLevel);
+            return $this->stringLogLevel($this->maxLogLevel);
         }
         return $this->maxLogLevel;
     }
@@ -117,7 +71,7 @@ class Logger implements LoggerInterface
      */
     public function setMaxBacktraceLevel($level) : void
     {
-        $this->maxBacktraceLevel = self::numericLogLevel($level);
+        $this->maxBacktraceLevel = $this->numericLogLevel($level);
     }
 
 
@@ -131,31 +85,9 @@ class Logger implements LoggerInterface
     public function getMaxBacktraceLevel(bool $asInt = false)
     {
         if ($asInt === false) {
-            return self::stringLogLevel($this->maxBacktraceLevel);
+            return $this->stringLogLevel($this->maxBacktraceLevel);
         }
         return $this->maxBacktraceLevel;
-    }
-
-
-    /**
-     * Disable output to browser / cli.
-     *
-     * @return void
-     */
-    public function disableOutput() : void
-    {
-        $this->output = false;
-    }
-
-
-    /**
-     * Enable output to browser / cli.
-     *
-     * @return void
-     */
-    public function enableOutput() : void
-    {
-        $this->output = true;
     }
 
 
@@ -166,7 +98,7 @@ class Logger implements LoggerInterface
      *
      * @return integer The log level as integer.
      */
-    private static function numericLogLevel($loglevel) : int
+    private function numericLogLevel($loglevel) : int
     {
         if (is_int($loglevel)) {
             return $loglevel;
@@ -200,7 +132,7 @@ class Logger implements LoggerInterface
      *
      * @return string The log level as string.
      */
-    private static function stringLogLevel(int $loglevel) : string
+    private function stringLogLevel(int $loglevel) : string
     {
         switch ($loglevel) {
             case 0:
@@ -237,7 +169,7 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array()) : void
     {
-        $levelInt = self::numericLogLevel($level);
+        $levelInt = $this->numericLogLevel($level);
         if ($this->maxLogLevel < $levelInt) {
             //Ignore it completely
             return;
@@ -250,7 +182,7 @@ class Logger implements LoggerInterface
 
         //Replace any tags in the message with values from context
         if (!empty($context)) {
-            $message = Formatters::replaceTags($message, $context);
+            $message = $this->replaceTags($message, $context);
         }
 
         //Prepend the date and time, pid, log level and indent.
@@ -271,27 +203,32 @@ class Logger implements LoggerInterface
             } else {
                 $logString .= $newLineIndent . 'In unknown file and line'; // @codeCoverageIgnore
             }
-            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, self::logTraceString($context['exception']->getTrace()));
+            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, $this->logTraceString($context['exception']->getTrace()));
         } else if ($levelInt <= $this->getMaxBacktraceLevel(true)) {
-            $trace = self::getLogTraceArray();
+            $trace = $this->getLogTraceArray();
             $first = array_shift($trace);
             if (isset($first['file']) && isset($first['line'])) {
                 $logString .= $newLineIndent . 'In ' . $first['file'] . ':' . $first['line'];
             } else {
                 $logString .= $newLineIndent . 'In unknown file and line'; // @codeCoverageIgnore
             }
-            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, self::logTraceString($trace));
+            $logString .= $newLineIndent . str_replace("\n", $newLineIndent, $this->logTraceString($trace));
         }
 
         $output = $logPrefix . $logString . "\n";
 
-        if (is_string($this->logFilename)) {
-            file_put_contents($this->logFilename, $output, FILE_APPEND);
-        }
-        if ($this->output) {
-            echo $output;
-        }
+        $this->output($output);
     }
+
+
+    /**
+     * The actual output function must be defined by child class.
+     *
+     * @param string $output The output.
+     *
+     * @return void
+     */
+    abstract protected function output(string $output) : void;
 
 
     /**
@@ -299,7 +236,7 @@ class Logger implements LoggerInterface
      *
      * @return array
      */
-    public static function getLogTraceArray() : array
+    public function getLogTraceArray() : array
     {
         $trace = debug_backtrace();
 
@@ -329,7 +266,7 @@ class Logger implements LoggerInterface
      *
      * @return string
      */
-    public static function logTraceString(array $trace, int $maxLength = 6) : string
+    public function logTraceString(array $trace, int $maxLength = 6) : string
     {
         $retval = array();
         foreach ($trace as $entryId => $entry) {
@@ -389,6 +326,9 @@ class Logger implements LoggerInterface
     public function indentDecrease() : void
     {
         $this->indent -= 4;
+        if ($this->indent < 0) {
+            $this->indent = 0;
+        }
     }
 
 
@@ -400,5 +340,35 @@ class Logger implements LoggerInterface
     private function indent() : string
     {
         return str_repeat(' ', $this->indent);
+    }
+
+
+    /**
+     * Replace tags in a string
+     *
+     * @param mixed $message String or something castable to a string on which to perform the replacement.
+     * @param array $context Array of tags (key) and replacements (value).
+     *
+     * @return string
+     */
+    public function replaceTags($message, array $context = array()) : string
+    {
+        // build a replacement array with braces around the context keys
+        $replace = array();
+        foreach ($context as $key => $val) {
+            // cast the value to a string if possible, otherwise indicate the type.
+            if (is_array($val)) {
+                $replace['{' . $key . '}'] = 'array(' . count($val) . ')';
+            } else if (!is_object($val) || method_exists($val, '__toString')) {
+                $replace['{' . $key . '}'] = (string)$val;
+            } else if (is_object($val)) {
+                $replace['{' . $key . '}'] = 'object:' . get_class($val) . '';
+            } else {
+                $replace['{' . $key . '}'] = gettype($val);
+            }
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
     }
 }

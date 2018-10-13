@@ -22,8 +22,6 @@
         }
     ],
     "require": {
-        "mikk3lro/atomix/converters": "~0.0.0",
-        "mikk3lro/atomix/settings": "~0.2.0",
         "psr/log": "^1.0.1"
     },
     "require-dev": {

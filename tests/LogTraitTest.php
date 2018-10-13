@@ -1,44 +1,38 @@
 <?php
 declare(strict_types=1);
 
+namespace Mikk3lRo\atomix\Tests;
+
 use PHPUnit\Framework\TestCase;
 
-use Mikk3lRo\atomix\io\Logger;
-use Mikk3lRo\atomix\io\LogTrait;
+use Mikk3lRo\atomix\io\OutputLogger;
 
-class loggingClass {
-    use LogTrait;
-    function testDebug() {
-        $this->log()->debug('This is debug level...');
-    }
-    function testEmergency() {
-        $this->log()->emergency('This is emergency level...');
-    }
-}
+require_once __DIR__ . '/testOnlyClasses/LoggingClass.php';
 
 final class LogTraitTest extends TestCase
 {
-    private $log_pcre_prefix = '(\[[^\]]+\]\s*){3}\s';
+    private $logPcrePrefix = '(\[[^\]]+\]\s*){3}\s';
 
-    public function testCanInstantiate() {
-        $loggingClass = new loggingClass();
-        $this->assertInstanceOf(loggingClass::class, $loggingClass);
-        return $loggingClass;
+
+    public function testCanInstantiate()
+    {
+        $loggingClass = new LoggingClass();
+        $this->assertInstanceOf(LoggingClass::class, $loggingClass);
     }
-    /**
-     * @depends testCanInstantiate
-     */
-    public function testNullLogger(loggingClass $loggingClass) {
+
+
+    public function testNullLogger()
+    {
         $this->expectOutputString('');
-        $loggingClass->testEmergency();
+        (new LoggingClass)->testEmergency();
     }
-    /**
-     * @depends testCanInstantiate
-     */
-    public function testCanRedefineLogger(loggingClass $loggingClass) {
-        $outputlogger = new Logger();
-        $loggingClass->setLogger($outputlogger);
-        $this->expectOutputRegex('#^' . $this->log_pcre_prefix . 'This is emergency level...$#m');
+
+
+    public function testCanRedefineLogger()
+    {
+        $loggingClass = new LoggingClass;
+        $loggingClass->setLogger(new OutputLogger);
+        $this->expectOutputRegex('#^' . $this->logPcrePrefix . 'This is emergency level...$#m');
         $loggingClass->testEmergency();
     }
 }
