@@ -4,7 +4,7 @@ namespace Mikk3lRo\atomix\io;
 
 use Mikk3lRo\atomix\io\AbstractLogger;
 
-class FileLogger extends AbstractLogger
+class FileLoggerWithDate extends AbstractLogger
 {
     /**
      * @var string Log filename
@@ -15,7 +15,7 @@ class FileLogger extends AbstractLogger
     /**
      * Instantiate.
      *
-     * @param string $filename Log filename.
+     * @param string $filename Log filename - use [DATE] where the date should be.
      */
     public function __construct(string $filename)
     {
@@ -30,6 +30,6 @@ class FileLogger extends AbstractLogger
      */
     protected function output(string $output): void
     {
-        file_put_contents($this->filename, $output, FILE_APPEND);
+        file_put_contents(str_replace('[DATE]', date('Y_m_d'), $this->filename), $output, FILE_APPEND);
     }
 }

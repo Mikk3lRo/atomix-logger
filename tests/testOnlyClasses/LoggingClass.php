@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types = 1);
+
 namespace Mikk3lRo\atomix\Tests;
 
 use Mikk3lRo\atomix\io\LogTrait;

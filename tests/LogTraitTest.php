@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Mikk3lRo\atomix\Tests;
 
@@ -9,6 +8,10 @@ use Mikk3lRo\atomix\io\OutputLogger;
 
 require_once __DIR__ . '/testOnlyClasses/LoggingClass.php';
 
+/**
+ * @covers Mikk3lRo\atomix\io\AbstractLogger
+ * @covers Mikk3lRo\atomix\io\LogTrait
+ */
 final class LogTraitTest extends TestCase
 {
     private $logPcrePrefix = '(\[[^\]]+\]\s*){3}\s';

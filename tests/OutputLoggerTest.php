@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Mikk3lRo\atomix\Tests;
 
@@ -11,6 +10,10 @@ use Psr\Log\LoggerInterface;
 
 use Mikk3lRo\atomix\io\OutputLogger;
 
+/**
+ * @covers Mikk3lRo\atomix\io\AbstractLogger
+ * @covers Mikk3lRo\atomix\io\OutputLogger
+ */
 final class OutputLoggerTest extends TestCase
 {
     private $logPcrePrefix = '(\[[^\]]+\]\s*){3}\s';
