@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\Tests;
+namespace Mikk3lRo\Tests;
 
 use PHPUnit\Framework\TestCase;
 
@@ -8,11 +8,11 @@ use stdClass;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 
-use Mikk3lRo\atomix\io\OutputLogger;
+use Mikk3lRo\atomix\logger\OutputLogger;
 
 /**
- * @covers Mikk3lRo\atomix\io\AbstractLogger
- * @covers Mikk3lRo\atomix\io\OutputLogger
+ * @covers Mikk3lRo\atomix\logger\AbstractLogger
+ * @covers Mikk3lRo\atomix\logger\OutputLogger
  */
 final class OutputLoggerTest extends TestCase
 {

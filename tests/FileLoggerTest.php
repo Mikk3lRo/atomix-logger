@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\Tests;
+namespace Mikk3lRo\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use Mikk3lRo\atomix\io\FileLogger;
+use Mikk3lRo\atomix\logger\FileLogger;
 use Psr\Log\LoggerInterface;
 use TypeError;
 
 /**
- * @covers Mikk3lRo\atomix\io\AbstractLogger
- * @covers Mikk3lRo\atomix\io\FileLogger
+ * @covers Mikk3lRo\atomix\logger\AbstractLogger
+ * @covers Mikk3lRo\atomix\logger\FileLogger
  */
 final class FileLoggerTest extends TestCase
 {

@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\io;
+namespace Mikk3lRo\atomix\logger;
 
-use Mikk3lRo\atomix\io\AbstractLogger;
+use Mikk3lRo\atomix\logger\AbstractLogger;
 
 class FileLoggerWithDate extends AbstractLogger
 {

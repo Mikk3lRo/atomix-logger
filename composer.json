@@ -1,5 +1,7 @@
 {
-    "name": "mikk3lro/atomix/logger",
+    "name": "mikk3lro/atomix-logger",
+    "description": "Some logger classes often needed.",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Mikk3lRo",
@@ -8,27 +10,21 @@
     ],
     "autoload": {
         "psr-4" : {
-            "Mikk3lRo\\atomix\\io\\" : "src/"
+            "Mikk3lRo\\atomix\\logger\\" : "src/"
         },
         "exclude-from-classmap": ["/tests/"]
     },
-    "archive": {
-        "exclude": ["/tests/"]
+    "scripts": {
+      "test": "php vendor/phpunit/phpunit/phpunit",
+      "coverage": "php vendor/phpunit/phpunit/phpunit --coverage-html=/var/www/html/ --whitelist src",
+      "cs": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s",
+      "cstests": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s --standard=phpcsTests.xml"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://mikk3lro.bitbucket.io/satis"
-        }
-    ],
     "require": {
         "psr/log": "^1.1.0"
     },
     "require-dev": {
-        "mikk3lro/atomix/coding_standards": "~0.0.0",
-        "phpunit/phpunit": "^6",
-        "squizlabs/php_codesniffer": "~3.3",
-        "slevomat/coding-standard": "~4.0"
-    },
-    "license": "proprietary"
+        "mikk3lro/coding-standards": "~0.1.0",
+        "phpunit/phpunit": "^6"
+    }
 }

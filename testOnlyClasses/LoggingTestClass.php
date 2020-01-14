@@ -1,10 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\Tests;
+use Mikk3lRo\atomix\logger\LogTrait;
 
-use Mikk3lRo\atomix\io\LogTrait;
-
-class LoggingClass
+class LoggingTestClass
 {
     use LogTrait;
 

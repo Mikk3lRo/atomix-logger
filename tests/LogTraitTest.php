@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\Tests;
+namespace Mikk3lRo\Tests;
 
+use LoggingTestClass;
+use Mikk3lRo\atomix\logger\OutputLogger;
 use PHPUnit\Framework\TestCase;
 
-use Mikk3lRo\atomix\io\OutputLogger;
-
-require_once __DIR__ . '/testOnlyClasses/LoggingClass.php';
+require_once __DIR__ . '/../testOnlyClasses/LoggingTestClass.php';
 
 /**
- * @covers Mikk3lRo\atomix\io\AbstractLogger
- * @covers Mikk3lRo\atomix\io\LogTrait
+ * @covers Mikk3lRo\atomix\logger\AbstractLogger
+ * @covers Mikk3lRo\atomix\logger\LogTrait
  */
 final class LogTraitTest extends TestCase
 {
@@ -19,21 +19,21 @@ final class LogTraitTest extends TestCase
 
     public function testCanInstantiate()
     {
-        $loggingClass = new LoggingClass();
-        $this->assertInstanceOf(LoggingClass::class, $loggingClass);
+        $loggingClass = new LoggingTestClass();
+        $this->assertInstanceOf(LoggingTestClass::class, $loggingClass);
     }
 
 
     public function testNullLogger()
     {
         $this->expectOutputString('');
-        (new LoggingClass)->testEmergency();
+        (new LoggingTestClass)->testEmergency();
     }
 
 
     public function testCanRedefineLogger()
     {
-        $loggingClass = new LoggingClass;
+        $loggingClass = new LoggingTestClass;
         $loggingClass->setLogger(new OutputLogger);
         $this->expectOutputRegex('#^' . $this->logPcrePrefix . 'This is emergency level...$#m');
         $loggingClass->testEmergency();

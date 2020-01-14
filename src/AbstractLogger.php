@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Mikk3lRo\atomix\io;
+namespace Mikk3lRo\atomix\logger;
 
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerTrait;
