@@ -113,16 +113,16 @@
         },
         {
             "name": "mikk3lro/coding-standards",
-            "version": "v0.1.3",
+            "version": "v0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mikk3lRo/coding-standard.git",
-                "reference": "c7686868402f7fddf4119a675d03d8952a102f77"
+                "reference": "a1562dece142f789f480a316b8576ab66ff3e381"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mikk3lRo/coding-standard/zipball/c7686868402f7fddf4119a675d03d8952a102f77",
-                "reference": "c7686868402f7fddf4119a675d03d8952a102f77",
+                "url": "https://api.github.com/repos/Mikk3lRo/coding-standard/zipball/a1562dece142f789f480a316b8576ab66ff3e381",
+                "reference": "a1562dece142f789f480a316b8576ab66ff3e381",
                 "shasum": ""
             },
             "require": {
@@ -152,7 +152,7 @@
                 }
             ],
             "description": "My coding standards",
-            "time": "2020-01-14T16:42:41+00:00"
+            "time": "2020-01-16T19:33:00+00:00"
         },
         {
             "name": "myclabs/deep-copy",
